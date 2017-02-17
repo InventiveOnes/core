@@ -76,9 +76,9 @@ class Manager extends PublicEmitter implements IUserManager {
 	 * @param \OCP\IConfig $config
 	 * @param IDBConnection $connection
 	 */
-	public function __construct(IConfig $config, IDBConnection $connection) {
+	public function __construct(IConfig $config, AccountMapper $accountMapper) {
 		$this->config = $config;
-		$this->accountMapper = new AccountMapper($connection);
+		$this->accountMapper = $accountMapper;
 		$cachedUsers = &$this->cachedUsers;
 		$this->listen('\OC\User', 'postDelete', function ($user) use (&$cachedUsers) {
 			/** @var \OC\User\User $user */
@@ -355,6 +355,7 @@ class Manager extends PublicEmitter implements IUserManager {
 		$account->setUserId($uid);
 		$account->setBackend(get_class($backend));
 		$account->setState(Account::STATE_ENABLED);
+		$account->setLastLogin(0);
 		$b = $account->getBackendInstance();
 		if ($b->implementsActions(Backend::GET_DISPLAYNAME)) {
 			$account->setDisplayName($b->getDisplayName($uid));

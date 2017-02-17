@@ -157,7 +157,7 @@ class User implements IUser {
 	 * @return int
 	 */
 	public function getLastLogin() {
-		return $this->account->getLastLogin();
+		return (int)$this->account->getLastLogin();
 	}
 
 	/**
